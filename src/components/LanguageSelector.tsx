@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ChangeEvent } from 'react';
 import { Language } from '../types';
 import { LANGUAGES } from '../constants';
 import { ChevronDown } from 'lucide-react';
@@ -9,7 +9,7 @@ interface LanguageSelectorProps {
   label: string;
 }
 
-export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ selected, onSelect, label }) => {
+export const LanguageSelector = ({ selected, onSelect, label }: LanguageSelectorProps) => {
   return (
     <div className="flex flex-col gap-1 w-full">
       <span className="text-[10px] uppercase tracking-wider font-bold text-text-secondary ml-1">
@@ -26,7 +26,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ selected, on
         </div>
         <select
           value={selected.code}
-          onChange={(e) => {
+          onChange={(e: ChangeEvent<HTMLSelectElement>) => {
             const lang = LANGUAGES.find(l => l.code === e.target.value);
             if (lang) onSelect(lang);
           }}
