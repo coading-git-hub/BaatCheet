@@ -1,0 +1,28 @@
+import { Language } from './types';
+
+export const LANGUAGES: Language[] = [
+  { code: 'en', name: 'English', flag: 'us' },
+  { code: 'hi', name: 'Hindi', flag: 'in' },
+  { code: 'es', name: 'Spanish', flag: 'es' },
+  { code: 'fr', name: 'French', flag: 'fr' },
+  { code: 'de', name: 'German', flag: 'de' },
+  { code: 'zh', name: 'Chinese', flag: 'cn' },
+  { code: 'ja', name: 'Japanese', flag: 'jp' },
+  { code: 'ko', name: 'Korean', flag: 'kr' },
+  { code: 'ar', name: 'Arabic', flag: 'sa' },
+  { code: 'ru', name: 'Russian', flag: 'ru' },
+  { code: 'pt', name: 'Portuguese', flag: 'pt' },
+  { code: 'it', name: 'Italian', flag: 'it' },
+  { code: 'tr', name: 'Turkish', flag: 'tr' },
+  { code: 'vi', name: 'Vietnamese', flag: 'vn' },
+  { code: 'th', name: 'Thai', flag: 'th' },
+  { code: 'ur', name: 'Urdu', flag: 'pk' },
+  { code: 'bn', name: 'Bengali', flag: 'bd' },
+  { code: 'pa', name: 'Punjabi', flag: 'in' },
+  { code: 'mr', name: 'Marathi', flag: 'in' },
+  { code: 'te', name: 'Telugu', flag: 'in' },
+  { code: 'ta', name: 'Tamil', flag: 'in' },
+  { code: 'gu', name: 'Gujarati', flag: 'in' },
+  { code: 'kn', name: 'Kannada', flag: 'in' },
+  { code: 'ml', name: 'Malayalam', flag: 'in' },
+];

@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Helvetica Neue", Arial, sans-serif;
+  
+  --color-bg: #0F172A;
+  --color-surface: #1E293B;
+  --color-border: #334155;
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #94A3B8;
+  --color-accent-teal: #2DD4BF;
+  --color-accent-indigo: #818CF8;
+  
+  --background-image-gradient-primary: linear-gradient(135deg, #2DD4BF, #818CF8);
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-text-primary font-sans;
+  }
+}
+
+@layer components {
+  .geometric-card {
+    @apply bg-surface border border-border rounded-[20px] p-5;
+  }
+  
+  .geometric-bubble-source {
+    @apply bg-surface text-text-secondary rounded-[20px] rounded-bl-[4px] p-4;
+  }
+  
+  .geometric-bubble-target {
+    @apply bg-gradient-primary text-bg font-medium rounded-[20px] rounded-br-[4px] p-4;
+  }
+}

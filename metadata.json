@@ -1,0 +1,6 @@
+{
+  "name": "BaatCheet Translator",
+  "description": "A modern, real-time Speech-to-Speech Translator. Note: Voice features require opening the app in a new tab due to browser security.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["speech-to-text", "text-to-speech", "translation"]
+}
