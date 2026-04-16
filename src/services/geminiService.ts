@@ -1,8 +1,12 @@
 import { GoogleGenAI } from "@google/genai";
 
-// Standard initialization as per Gemini API skill
-const ai = new GoogleGenAI({ 
-  apiKey: process.env.GEMINI_API_KEY || "" 
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
+if (!apiKey) {
+  throw new Error("Missing Gemini API key. Set VITE_GEMINI_API_KEY in your .env file.");
+}
+
+const ai = new GoogleGenAI({
+  apiKey,
 });
 
 export async function translateText(
@@ -25,12 +29,14 @@ export async function translateText(
   } catch (error) {
     console.error("Translation error:", error);
     if (error instanceof Error) {
-      // If the error is about the API key, the platform will usually handle the prompt
-      // but we return a generic message to the UI.
-      if (error.message.includes("API_KEY_INVALID") || error.message.includes("403")) {
-        return "Error: API Key issue. Please check your AI Studio secrets.";
+      const message = error.message;
+      if (message.includes("reported as leaked")) {
+        return "Error: Your API key was reported as leaked. Replace it with a new key and keep it private.";
       }
-      return `Error: ${error.message}`;
+      if (message.includes("API_KEY_INVALID") || message.includes("403")) {
+        return "Error: API key issue. Please check your AI Studio secrets.";
+      }
+      return `Error: ${message}`;
     }
     return "Error during translation";
   }

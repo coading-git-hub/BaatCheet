@@ -62,6 +62,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [voiceNotice, setVoiceNotice] = useState<string | null>(null);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [settings, setSettings] = useState<AppSettings>({
     voiceSpeed: 1,
@@ -73,6 +74,7 @@ export default function App() {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const synthesisRef = useRef<SpeechSynthesis | null>(null);
   const transcriptRef = useRef("");
+  const unsupportedVoiceLanguages = ['ar', 'ur', 'pa', 'bn', 'mr', 'te', 'ta', 'gu', 'kn', 'ml'];
 
   // Initialize Speech Services
   useEffect(() => {
@@ -169,30 +171,37 @@ export default function App() {
       if (!synthesisRef.current) return;
 
       const utterance = new SpeechSynthesisUtterance(text);
-      
+      setVoiceNotice(null);
+
       // Try to find the best matching voice
-      const voices = synthesisRef.current.getVoices();
-      
-      // Log voices for debugging if needed
+      let voices = synthesisRef.current.getVoices();
+      if (voices.length === 0 && synthesisRef.current.onvoiceschanged) {
+        voices = synthesisRef.current.getVoices();
+      }
+
       if (voices.length === 0) {
-        console.warn("No voices available yet. Speech might not play.");
+        console.warn("No speech synthesis voices are loaded yet. Speech may still work with the browser default voice.");
       }
 
       // Priority matching: 1. Exact lang match, 2. Starts with lang code, 3. Includes lang code
-      const voice = voices.find(v => v.lang === langCode) || 
-                    voices.find(v => v.lang.startsWith(langCode)) || 
+      const voice = voices.find(v => v.lang === langCode) ||
+                    voices.find(v => v.lang.startsWith(langCode)) ||
                     voices.find(v => v.lang.includes(langCode));
-      
+
       if (voice) {
         utterance.voice = voice;
       } else {
-        console.warn(`No specific voice found for ${langCode}. Using system default.`);
-        // If it's a known language that often lacks voices, we could warn the user
-        if (langCode === 'ar' || langCode === 'ur') {
-          setError(`Note: Your browser might not have a high-quality voice for ${targetLang.name}. Translation will still work, but voice output may vary.`);
+        const fallbackVoice = voices.find(v => v.default) || voices[0];
+        if (fallbackVoice) {
+          utterance.voice = fallbackVoice;
+        }
+
+        console.warn(`No specific voice found for ${langCode}. Using system/default voice.`);
+        if (unsupportedVoiceLanguages.includes(langCode)) {
+          setVoiceNotice(`Note: ${targetLang.name} voice may not be available in this browser. Translation will still work, but voice output may vary.`);
         }
       }
-      
+
       utterance.lang = langCode;
       utterance.rate = settings.voiceSpeed;
       utterance.pitch = settings.voicePitch;
@@ -219,7 +228,7 @@ export default function App() {
         synthesisRef.current.resume();
       }
     }, 150);
-  }, [settings]);
+  }, [settings, targetLang.name]);
 
   // Handle Translation
   const lastTranslatedText = useRef("");
@@ -579,6 +588,12 @@ export default function App() {
                     </motion.div>
                   )}
                 </AnimatePresence>
+
+                {voiceNotice && (
+                  <div className="rounded-3xl border border-accent-teal/20 bg-accent-teal/5 p-4 text-sm text-text-secondary">
+                    {voiceNotice}
+                  </div>
+                )}
               </div>
 
               {isTranslating && (
